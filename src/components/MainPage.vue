@@ -10,8 +10,9 @@
                         <li
                             v-for='item in navigationMenu'
                             :key='item.id'
+                            @click="closeSidebarPanel"
                         >
-                            <a :href='item.url'>{{item.title}}</a>
+                            <a href='#'>{{item.title}}</a>
                         </li>
                     </ul>
                 </Sidebar>
@@ -24,11 +25,15 @@
 <script>
 import Header from './Header';
 import Burger from './menu/Burger';
-import Sidebar from './menu/Sidebar'
+import Sidebar from './menu/Sidebar';
+import { mutations } from '@/store.js'
 
 export default {
     name: 'mainPage',
     components: { Header, Burger, Sidebar },
+     methods: {
+        closeSidebarPanel: mutations.toggleNav
+    },
     data() {
         return {
             navigationMenu: [

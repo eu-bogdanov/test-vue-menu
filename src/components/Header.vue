@@ -6,15 +6,17 @@
                     class='header__menu-item'
                     v-for='item in navMenu'
                     :key='item.id'
+                    @mouseenter="onTabHover(item)"
                 >
-                    <a-dropdown>
+                    <a-dropdown
+                        :overlayClassName="`${!!selectedTab && +selectedTab.navId === +item.id ? `drop-down`:''}`"
+                    >
                         <a class="ant-dropdown-link"
                             @click="e => e.preventDefault()" 
-                            @mouseenter="onTabHover(item)"
                         >
                             {{item.title}}
                         </a>
-                        <a-menu slot="overlay">
+                        <a-menu slot="overlay" v-if="!!selectedTab && +selectedTab.navId === +item.id">
                             <a-row class='header__menu-content'>
                                 <a-col :span="10" class='header__menu-left'>
                                     <a-menu-item
@@ -58,20 +60,16 @@ export default {
             selectedTab: []
         }
     },
-    computed: {
-        menuTitles() {
-            return this.navMenu.map(el => el.title)
-        }
-    },
     watch: {
         currentTab: function () {
-            this.selectedTab = !!this.menuList && this.menuList.find(el => el.navId === this.currentTab)
+            this.selectedTab = !!this.menuList && this.menuList.find(el => el.navId === this.currentTab);
         }
     },
     methods: {
         onTabHover(item) {
-            this.currentTab = item.id
-        }
+            this.currentTab = item.id;
+            this.selectedTab = !!this.menuList && this.menuList.find(el => el.navId === this.currentTab);
+        },
     }
 }
 </script>
@@ -146,8 +144,8 @@ export default {
 ul.ant-dropdown-menu.ant-dropdown-menu-vertical.ant-dropdown-menu-root.ant-dropdown-menu-light.ant-dropdown-content {
     background-color: #73b0d6;
 }
-.ant-dropdown.ant-dropdown-placement-bottomLeftr:before,
-.ant-dropdown.ant-dropdown-placement-bottomLeft:after {
+.drop-down:after,
+.drop-down:before {
   content: '';
   position: absolute;
   bottom: 100%;
@@ -155,7 +153,7 @@ ul.ant-dropdown-menu.ant-dropdown-menu-vertical.ant-dropdown-menu-root.ant-dropd
   border: 11px solid transparent;
   border-bottom-color: #dddddd;
 }
-.ant-dropdown.ant-dropdown-placement-bottomLeft:after {
+.drop-down:after {
     left: 9px;
     border: 10px solid transparent;
     border-bottom-color: #73b0d6;
